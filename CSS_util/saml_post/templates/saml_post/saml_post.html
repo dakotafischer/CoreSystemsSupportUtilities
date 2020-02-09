@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en"></html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SAML_POST</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'logs/home_page.css' %}">
+</head>
+<body>
+<h1> SAML Post </h1>
+
+<form action="{% url 'saml_post:SamlPostView' %}" method="post">
+{% csrf_token %}
+    <label for="issuer_id">Issuer ID: </label>
+    <input type="text" name="issuer_id" id="issuer_id" size="40" value="{{ fields.issuer_id }}"><br>
+
+    <p>Attributes:</p>
+    <label for="saml_subject">SAML Subject: </label>
+    <input type="text" name="saml_subject" id="saml_subject" value="{{ fields.saml_subject }}"><br>
+
+    <div id="container">
+        <p id="lastAttribute"> Attribute #1:</p>
+        <label for="attribute_name">   Name: </label>
+        <input type="text" name="attribute_name" id="attribute_name"  value="{{ fields.attribute_name }}"><br>
+        <label for="attribute_value">   Value: </label>
+        <input type="text" name="attribute_value" id="attribute_value" value="{{ fields.attribute_value}}"><br>
+
+    </div>
+    <br>
+    <input type="hidden" id="attribute_count" name="attribute_count" value="1">
+    <input type="button" onclick="addAttribute()" value="Add Additional Attribute"><br><br>
+
+    <label for="audience_id">Service Providers Entity ID: </label>
+        <input type="text" name="audience_id" id="audience_id" size="40" value="{{ fields.audience_id }}"><br>
+
+    <label for="acs_endpoint">ACS Endpoint: </label>
+    <input type="text" name="acs_endpoint" size="50" id="acs_endpoint" value="{{ fields.acs_endpoint}}"><br><br>
+    {% if encoded_saml %}
+    <input type="submit" value="Re-Generate SAML"><br>
+    {% else %}
+    <input type="submit" value="Generate SAML"><br>
+    {% endif %}
+</form>
+
+{% if encoded_saml %}
+
+<form action="{{ fields.acs_endpoint }}" target="_blank" method="post">
+    <input type="hidden" name="SAMLResponse" id="SAMLResponse"  value="{{ encoded_saml }}"><br>
+    <input type="submit" value="Post SAML to ACS Endpoint:  {{ fields.acs_endpoint }}">
+</form>
+<br>
+<textarea readonly rows=40 cols=200 id="signedXML">{{ signed_saml }}</textarea><br>
+
+{% endif %}
+<br>
+<form method="get" action="{% static 'saml_post/publickey.cer' %}">
+<input type="submit" value="Download Public Signing Certificate" onclick=""><br>
+</form>
+
+
+</body>
+</html>

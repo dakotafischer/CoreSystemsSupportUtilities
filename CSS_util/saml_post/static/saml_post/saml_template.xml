@@ -1,0 +1,28 @@
+<samlp:Response ID="_4ba3eca7-7f9f-4a77-9006-4e1fae8bee1b" Version="2.0" IssueInstant="2020-01-10T13:09:52.256Z" Destination="https://secure-enroll.com/sso/saml" 
+    xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
+    <Issuer xmlns="urn:oasis:names:tc:SAML:2.0:assertion">https://sts.windows.net/23e14383-b783-4c99-bf4f-5049cd014ec6/</Issuer>
+    <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="placeholder" />
+    <samlp:Status>
+        <samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/>
+    </samlp:Status>
+    <Assertion ID="_fdaa4a4b-ffad-4d60-bb95-86bb6c312000" IssueInstant="2020-01-10T13:09:52.256Z" Version="2.0" 
+        xmlns="urn:oasis:names:tc:SAML:2.0:assertion">
+        <Issuer>https://sts.windows.net/23e14383-b783-4c99-bf4f-5049cd014ec6/</Issuer>
+        <Subject>
+            <NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:persistent">0VFMNdkRdozsmj7W8PDmoCgje2almNSSeKSz1N2v1FM</NameID>
+            <SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+                <SubjectConfirmationData NotOnOrAfter="2020-01-10T14:09:51.974Z" Recipient="https://secure-enroll.com/sso/saml"/>
+            </SubjectConfirmation>
+        </Subject>
+        <Conditions NotBefore="2020-01-10T13:04:51.974Z" NotOnOrAfter="2020-01-10T14:09:51.974Z">
+            <AudienceRestriction>
+                <Audience>https://secure-enroll.com/sso/saml</Audience>
+            </AudienceRestriction>
+        </Conditions>
+        <AttributeStatement>
+            <Attribute Name="http://schemas.microsoft.com/identity/claims/tenantid">
+                <AttributeValue>23e14383-b783-4c99-bf4f-5049cd014ec6</AttributeValue>
+            </Attribute>
+        </AttributeStatement>
+    </Assertion>
+</samlp:Response>
