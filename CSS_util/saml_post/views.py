@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
 from lxml import etree as ET
+from copy import deepcopy
 from signxml import XMLSigner, XMLVerifier
 import signxml
 import datetime
@@ -32,6 +33,7 @@ class SamlPostView(generic.ListView):
     context_object_name = 'query_set'
     fields = {'issuer_id': 'SAML_Post.Test_Entity_ID',
               'saml_subject': 'some-example-id',
+              'attributes': dict(),
               'attribute_name': 'SSO_ID',
               'attribute_value': '46379',
               'audience_id': 'benefitfocus.com:sp',
@@ -42,12 +44,7 @@ class SamlPostView(generic.ListView):
 
     def get(self, request, *args, **kwargs):
         '''GET requests reset the fields to their default values and render the form.'''
-        self.fields = {'issuer_id': 'SAML_Post.Test_Entity_ID',
-                        'saml_subject': 'some-example-id',
-                        'attribute_name': 'SSO_ID',
-                        'attribute_value': '46379',
-                        'audience_id': 'benefitfocus.com:sp',
-                        'acs_endpoint': 'https://secure-enroll.com/sso/saml', }
+        self.get_default_fields()
         return render(request, self.template_name, {'fields': self.fields})
 
     def post(self, request, *args, **kwargs):
@@ -92,11 +89,26 @@ class SamlPostView(generic.ListView):
             hours=1)).strftime('%Y-%m-%dT%H:%M:%S.%fZ')[:-4] + 'Z'
         root.find('saml:Assertion', saml).find('saml:Conditions', saml).find('saml:AudienceRestriction', saml).find(
             'saml:Audience', saml).text = post_data['audience_id']
-        root.find('saml:Assertion', saml).find('saml:AttributeStatement', saml).find('saml:Attribute', saml).attrib[
-            'Name'] = post_data['attribute_name']
-        root.find('saml:Assertion', saml).find('saml:AttributeStatement', saml).find('saml:Attribute', saml).find(
-            'saml:AttributeValue', saml).text = post_data['attribute_value']
+        #root.find('saml:Assertion', saml).find('saml:AttributeStatement', saml).find('saml:Attribute', saml).attrib[
+        #    'Name'] = self.fields['attributes'][0]['attribute_name']  #post_data['attribute_name']
+        #root.find('saml:Assertion', saml).find('saml:AttributeStatement', saml).find('saml:Attribute', saml).find(
+        #    'saml:AttributeValue', saml).text = self.fields['attributes'][0]['attribute_value'] # post_data['attribute_value']
         root.find('saml:Assertion', saml).find('saml:Issuer', saml).text = post_data['issuer_id']
+
+        attribute_element_copy = deepcopy(root.find('saml:Assertion', saml).find('saml:AttributeStatement', saml).find(
+            'saml:Attribute', saml))
+        element_to_remove = root.find('saml:Assertion', saml).find('saml:AttributeStatement', saml).find('saml:Attribute', saml)
+        root.find('saml:Assertion', saml).find('saml:AttributeStatement', saml).remove(element_to_remove)
+        for attribute in self.fields['attributes']:
+            new_attribute = deepcopy(attribute_element_copy)
+            new_attribute.attrib['Name'] = attribute['attribute_name']
+            new_attribute.find('saml:AttributeValue', saml).text = attribute['attribute_value']
+            root.find('saml:Assertion', saml).find('saml:AttributeStatement', saml).append(new_attribute)
+
+
+        #test
+        #a = deepcopy(root.find('saml:Assertion', saml).find('saml:AttributeStatement', saml).find('saml:Attribute', saml))
+        #root.find('saml:Assertion', saml).find('saml:AttributeStatement', saml).append(a)
 
         # sign the newly created xml
         reference_uri = '_4ba3eca7-7f9f-4a77-9006-4e1fae8bee1b'
@@ -118,12 +130,48 @@ class SamlPostView(generic.ListView):
         signed_root = signer.sign(root, key=key, cert=cert, reference_uri=reference_uri)
         return ET.tostring(signed_root, encoding='utf-8')
 
+    def get_default_fields(self):
+        self.fields = {
+            'issuer_id': 'SAML_Post.Test_Entity_ID',
+            'saml_subject': 'some-example-id',
+            'attributes': [
+                {
+                    'meta_name': 'attribute_name_0',
+                    'meta_value': 'attribute_value_0',
+                    'attribute_name': 'SSO_ID',
+                    'attribute_value': '46379',
+                    'display_name': 'Attribute #1',
+                },
+            ],
+            'audience_id': 'benefitfocus.com:sp',
+            'acs_endpoint': 'https://secure-enroll.com/sso/saml',
+            'attribute_count': 1,
+        }
+        return None
+
+
     def update_default_fields(self, post_data):
         self.fields['issuer_id'] = post_data['issuer_id']
         self.fields['saml_subject'] = post_data['saml_subject']
-        self.fields['attribute_name'] = post_data['attribute_name']
-        self.fields['attribute_value'] = post_data['attribute_value']
         self.fields['audience_id'] = post_data['audience_id']
         self.fields['acs_endpoint'] = post_data['acs_endpoint']
+        self.fields['attribute_count'] = post_data['attribute_count']
+        self.fields['attributes'] = []
+        for attribute in range(int(self.fields['attribute_count'])):
+            meta_name = 'attribute_name_' + str(attribute)
+            meta_value = 'attribute_value_' + str(attribute)
+            attribute_name = post_data.get('attribute_name_' + str(attribute))
+            #attribute_name = post_data['attribute_name_' + str(attribute)]
+            attribute_value = post_data.get('attribute_value_' + str(attribute))
+            #attribute_value = post_data['attribute_value_' + str(attribute)]
+            attribute_display_name = 'Attribute #' + str(attribute) + ': '
+            attr = {
+                'meta_name': meta_name,
+                'meta_value': meta_value,
+                'attribute_name': attribute_name,
+                'attribute_value': attribute_value,
+                'display_name': attribute_display_name,
+            }
+            self.fields['attributes'].append(attr)
         return None
 

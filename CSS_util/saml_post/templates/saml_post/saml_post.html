@@ -19,15 +19,16 @@
     <input type="text" name="saml_subject" id="saml_subject" value="{{ fields.saml_subject }}"><br>
 
     <div id="container">
-        <p id="lastAttribute"> Attribute #1:</p>
-        <label for="attribute_name">   Name: </label>
-        <input type="text" name="attribute_name" id="attribute_name"  value="{{ fields.attribute_name }}"><br>
-        <label for="attribute_value">   Value: </label>
-        <input type="text" name="attribute_value" id="attribute_value" value="{{ fields.attribute_value}}"><br>
-
+        {% for attribute in fields.attributes %}
+        <p id="lastAttribute"> {{attribute.display_name}}</p>
+        <label for={{attribute.meta_name}}>   Name: </label>
+        <input type="text" name={{attribute.meta_name}} id={{attribute.meta_name}}  value="{{attribute.attribute_name}}"><br>
+        <label for={{attribute.meta_value}}>   Value: </label>
+        <input type="text" name={{attribute.meta_value}} id={{attribute.meta_value}} value="{{attribute.attribute_value }}"><br>
+        {% endfor %}
     </div>
     <br>
-    <input type="hidden" id="attribute_count" name="attribute_count" value="1">
+    <input type="hidden" id="attribute_count" name="attribute_count" value="{{fields.attribute_count}}">
     <input type="button" onclick="addAttribute()" value="Add Additional Attribute"><br><br>
 
     <label for="audience_id">Service Providers Entity ID: </label>

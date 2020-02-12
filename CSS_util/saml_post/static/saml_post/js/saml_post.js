@@ -22,7 +22,7 @@ function addAttribute() {
     container.appendChild(newParagraph);
 
     // add attribute_name label and input elements to get the attribute name info
-    var newAttributeName = "attribute_name_" + String(attributeNumber + 1);
+    var newAttributeName = "attribute_name_" + String(attributeNumber);
     var label = document.createElement("label");
     label.textContent = "Name: ";
     label.id = newAttributeName;
@@ -36,7 +36,7 @@ function addAttribute() {
     container.appendChild(document.createElement("br"));
 
     // add attribute_value label and input elements to get the attribute value info
-    var newAttributeValue = "attribute_value_" + String(attributeNumber + 1);
+    var newAttributeValue = "attribute_value_" + String(attributeNumber);
     var label = document.createElement("label");
     label.textContent = "Value: ";
     label.id = newAttributeValue;
