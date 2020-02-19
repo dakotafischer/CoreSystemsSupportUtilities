@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bunyan</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'logs/template.css' %}">
+</head>
+<body>
+<div id="mySidebar" class="sidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+    <a href="#">About</a>
+    <a href="#">Services</a>
+    <a href="#">Clients</a>
+    <a href="#">Contact</a>
+</div>
+
+<div id="main">
+  <button id="openbtn" class="openbtn" onclick="openNav()"><img class="paul" src="{% static 'logs/images/bunyan.png' %}" alt="Menu" id="paul">Menu</button>
+</div>
+
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
+
+
+
+
+<table id="myTable" class="w3-table w3-striped w3-hoverable">
+      <!--Inputs Used For Filtering-->
+  <tr>
+    <td><input id="inputName" onkeyup="filterTable()" class="w3-input" placeholder="header1..."></td>
+    <td><input id="inputCity" onkeyup="filterTable()" class="w3-input" placeholder="header2..."></td>
+    <td><input id="inputCountry" onkeyup="filterTable()" class="w3-input" placeholder="header3..."></td>
+    <td><input id="inputCountry" onkeyup="filterTable()" class="w3-input" placeholder="header4..."></td>
+  </tr>
+<tr class="w3-dark-grey">
+  <th>header1</th>
+  <th>header2</th>
+  <th>header3</th>
+  <th>header4</th>
+</tr>
+<tbody>
+{% for log in query_set %}
+<tr class="item">
+  <td> {{ log.environment }}</td>
+  <td> {{ log.date }}</td>
+  <td> {{ log.saml_subject }}</td>
+  <td> {{ log.entity_id }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if query_set.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ query_set.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ query_set.number }} of {{ query_set.paginator.num_pages }}.
+        </span>
+
+        {% if query_set.has_next %}
+            <a href="?page={{ query_set.next_page_number }}">next</a>
+            <a href="?page={{ query_set.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+<script src="js/bunyan.js"></script>
+</body>
+</html>
