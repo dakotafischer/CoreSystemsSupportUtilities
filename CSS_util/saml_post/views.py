@@ -58,6 +58,27 @@ class SamlPostView(generic.ListView):
         return render(request, self.template_name,
                       {'signed_saml': signed_saml, 'encoded_saml': encoded_saml, 'fields': self.fields})
                      # {'signed_saml': signed_saml.decode('utf-8'), 'encoded_saml': encoded_saml, 'fields': self.fields})
+    
+    def add_saml_profile(self, saml_profile):
+        profile = SamlProfile(
+            name = saml_profile['name'],
+            issuer_id = saml_profile['issuer_id'],
+            saml_subject = saml_profile['saml_subject'],
+            audience_id = saml_profile['audience_id'],
+            acs_endpoint = saml_profile['acs_endpoint'],
+        )
+        profile.save()
+        add_saml_profile_attributes(profile_id, saml_profile['attributes'])
+    
+    def add_saml_profile_attributes(self, profile_id, attributes):
+        for name, value in attributes.items():
+            saml_profile_attr = SamlProfileAttribute(
+                saml_profile_id = profile_id,
+                attribute_name = name,
+                attribute_value = value
+            )
+            saml_profile_attr.save()
+        
 
     def generate_saml(self, post_data):
         '''Update all of the relevant fields in saml_template.xml with the form data'''
