@@ -11,8 +11,9 @@ import signxml
 import datetime
 from datetime import timedelta
 import base64
-
 import xml.dom.minidom
+
+from saml_post.models import SamlProfile, SamlProfileAttribute
 
 '''
 Note: BF has Internet Explorer locked down on the RDP's where you could otherwise test legacy IE issues
@@ -24,6 +25,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 @method_decorator(csrf_exempt, name='dispatch')
 '''
+
 
 
 class SamlPostView(generic.ListView):
@@ -41,10 +43,21 @@ class SamlPostView(generic.ListView):
 
     def get_queryset(self, request, *args, **kwargs):
         return render(request, self.template_name, {'fields': self.fields})
+    
+    def get_profile(self,  saml_profile_id, *args, **kwargs):
+        profile = SamlProfile.objects.get(id=saml_profile_id)
+        self.fields['issuer_id'] = profile.issuer_id
+        self.fields['saml_subject'] = profile.saml_subject
+        for attribute in SamlProfileAttribute.objects.filter(saml_profile_id=saml_profile_id):
+            pass #attributes[]
+        #return render(request, self.template_name, {'fields': self.fields})
+
 
     def get(self, request, *args, **kwargs):
         '''GET requests reset the fields to their default values and render the form.'''
         self.get_default_fields()
+        if self.kwargs['saml_profile_id']:
+            self.get_profile(self.kwargs['saml_profile_id'])
         return render(request, self.template_name, {'fields': self.fields})
 
     def post(self, request, *args, **kwargs):
