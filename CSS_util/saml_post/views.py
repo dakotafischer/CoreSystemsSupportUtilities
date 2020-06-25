@@ -26,6 +26,19 @@ from django.views.decorators.csrf import csrf_exempt
 @method_decorator(csrf_exempt, name='dispatch')
 '''
 
+class SamlProfilesView(generic.ListView):
+    '''A view that processes input from a user and returns a signed SAML Response'''
+
+    template_name = 'saml_post/saml_profiles.html'
+    saml_profiles = SamlProfile.objects.all()
+    test_data = [
+        {'name': 'profile1'},
+        {'name': 'REL'},
+        {'name': 'EESTEW'},
+    ]
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'saml_profiles': self.saml_profiles})      
 
 
 class SamlPostView(generic.ListView):

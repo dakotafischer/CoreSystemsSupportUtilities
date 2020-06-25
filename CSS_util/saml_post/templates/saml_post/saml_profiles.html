@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en"></html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SAML_POST</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'logs/home_page.css' %}">
+</head>
+<body>
+<h1> SAML Profiles </h1>
+
+<h2> Choose the SAML Profile to Load:</h2>
+
+<div id="profiles_table"> 
+    {% for profile in saml_profiles %}
+    <ul>
+        <li>{{ profile.name }}</li>
+    </ul>
+    {% endfor %}
+</div>
+
+<p>Or Start from Scratch</p>
+
+<script src="{% static 'saml_post/js/saml_post.js' %}"></script>
+</body>
+</html>

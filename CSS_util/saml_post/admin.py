@@ -1,3 +1,5 @@
 from django.contrib import admin
+from saml_post.models import SamlProfile, SamlProfileAttribute
 
-# Register your models here.
+admin.site.register(SamlProfile)
+admin.site.register(SamlProfileAttribute)
