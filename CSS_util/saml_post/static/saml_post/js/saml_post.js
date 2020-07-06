@@ -92,3 +92,12 @@ function closeNav() {
     updateOpenBtnText("Menu");
     console.log("It was open, now it's closed!");
 }
+
+function highlight(e) {
+  if (selected[0]) selected[0].className = 'profileRecord';
+  e.target.parentNode.className = 'selected';
+}
+
+var table = document.getElementById('profileTable'),
+selected = table.getElementsByClassName('selected');
+table.onclick = highlight;

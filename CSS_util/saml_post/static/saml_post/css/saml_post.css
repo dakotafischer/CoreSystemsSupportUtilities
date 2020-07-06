@@ -1,0 +1,19 @@
+td {border: 1px #DDD solid; padding: 5px; cursor: pointer;}
+
+.selected {
+    background-color: #2196F3;
+    color: #FFF;
+}
+
+.profileRecord:hover {
+  background-color: #ccc;
+}
+
+.content {
+  margin: auto;
+  background: white;
+  padding: 10px;
+  text-align: center;
+}
+
+

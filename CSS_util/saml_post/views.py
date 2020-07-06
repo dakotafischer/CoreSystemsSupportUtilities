@@ -27,7 +27,7 @@ from django.views.decorators.csrf import csrf_exempt
 '''
 
 class SamlProfilesView(generic.ListView):
-    '''A view that processes input from a user and returns a signed SAML Response'''
+    '''A view that lists out the existing SAML Profiles that the user can load.'''
 
     template_name = 'saml_post/saml_profiles.html'
     saml_profiles = SamlProfile.objects.all()

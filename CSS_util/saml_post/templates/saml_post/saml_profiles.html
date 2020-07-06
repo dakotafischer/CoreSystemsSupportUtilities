@@ -1,26 +1,41 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en"></html>
+<html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SAML_POST</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'logs/home_page.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'saml_post/css/saml_post.css' %}">
 </head>
 <body>
+<div class="content">
 <h1> SAML Profiles </h1>
 
-<h2> Choose the SAML Profile to Load:</h2>
+<h2> Choose a SAML Profile to Load:</h2>
 
-<div id="profiles_table"> 
+<table id="profileTable" class="content">
+    <tr class="header">
+        <th>SAML Profile Name</th>
+        <th>Issuer ID</th>
+        <th>Audience Entity ID</th>
+        <th>Assertion Consumer Service</th>
+    </tr>
     {% for profile in saml_profiles %}
-    <ul>
-        <li>{{ profile.name }}</li>
-    </ul>
+    <tr class="profileRecord">
+        <td>{{ profile.name }}</td>
+        <td>{{ profile.issuer_id }}</td>
+        <td>{{ profile.audience_id }}</td>
+        <td>{{ acs_endpoint }}</td>
+    </tr>
     {% endfor %}
+</table>
+<br>
+<input type="button" id="tst" value="Load Selected Profile" onclick="fnselect()" />
+<br>
+<br>
+<h2> Or create a new SAML profile from scratch:</h2>
+<input type="button" id="tst2" value="Create a New Profile" onclick="fnselect()" />
+
 </div>
-
-<p>Or Start from Scratch</p>
-
 <script src="{% static 'saml_post/js/saml_post.js' %}"></script>
 </body>
 </html>
