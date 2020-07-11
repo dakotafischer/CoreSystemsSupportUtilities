@@ -94,10 +94,24 @@ function closeNav() {
 }
 
 function highlight(e) {
-  if (selected[0]) selected[0].className = 'profileRecord';
+  if (selected[0]) {
+    selected[0].className = 'profileRecord';
+  }
   e.target.parentNode.className = 'selected';
 }
 
 var table = document.getElementById('profileTable'),
 selected = table.getElementsByClassName('selected');
 table.onclick = highlight;
+
+function loadProfile() {
+    selected = table.getElementsByClassName('selected')[0];
+    if (selected == undefined) {
+        //tell user to select something
+        alert('Select a Profile to Load or choose "Start from Scratch"')
+    }
+    profile_url = selected.firstElementChild.textContent;
+    //location.href='https://google.com';
+    location.href = profile_url;
+    // this should redirect to /saml_post/ + the profile id that the user selected
+}

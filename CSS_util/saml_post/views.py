@@ -66,7 +66,7 @@ class SamlPostView(generic.ListView):
         #return render(request, self.template_name, {'fields': self.fields})
 
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, saml_profile_id=1, *args, **kwargs):
         '''GET requests reset the fields to their default values and render the form.'''
         self.get_default_fields()
         if self.kwargs['saml_profile_id']:

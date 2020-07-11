@@ -21,6 +21,8 @@
     </tr>
     {% for profile in saml_profiles %}
     <tr class="profileRecord">
+        <td style="display:none"> {% url 'saml_post:SamlPostView' profile.id %} </td>
+        <td style="display:none">{{ profile.id }}</td>
         <td>{{ profile.name }}</td>
         <td>{{ profile.issuer_id }}</td>
         <td>{{ profile.audience_id }}</td>
@@ -29,7 +31,10 @@
     {% endfor %}
 </table>
 <br>
-<input type="button" id="tst" value="Load Selected Profile" onclick="fnselect()" />
+<input type="button" id="tst" value="Load Selected Profile" onclick="loadProfile()" />
+
+
+
 <br>
 <br>
 <h2> Or create a new SAML profile from scratch:</h2>
