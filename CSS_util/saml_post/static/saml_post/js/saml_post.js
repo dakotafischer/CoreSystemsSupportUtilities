@@ -1,4 +1,5 @@
 
+// SAML Post
 function addAttribute() {
     //add two text fields for attribute name and attribute value
 
@@ -56,6 +57,8 @@ function addAttribute() {
         <input type="text" name="attribute_value" id="attribute_value" value="{{ fields.attribute_value}}"><br>
 */
 
+// Side Nav Menu
+
 function updateOpenBtnText(updateText) {
     //updates the text in the openbtn and prepends the logo
     logo = document.getElementById("paul");
@@ -93,6 +96,7 @@ function closeNav() {
     console.log("It was open, now it's closed!");
 }
 
+// SAML Profiles
 function highlight(e) {
   if (selected[0]) {
     selected[0].className = 'profileRecord';

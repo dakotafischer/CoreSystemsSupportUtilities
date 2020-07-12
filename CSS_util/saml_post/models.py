@@ -4,7 +4,7 @@ from django.db import models
 from django.utils import timezone
 
 class SamlProfile(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     issuer_id = models.CharField(max_length=200)
     saml_subject = models.CharField(max_length=200)
     audience_id = models.CharField(max_length=200)

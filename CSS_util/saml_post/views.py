@@ -57,11 +57,11 @@ class SamlPostView(generic.ListView):
     def get_queryset(self, request, *args, **kwargs):
         return render(request, self.template_name, {'fields': self.fields})
     
-    def get_profile(self,  saml_profile_id, *args, **kwargs):
-        profile = SamlProfile.objects.get(id=saml_profile_id)
+    def get_profile(self,  saml_profile_name, *args, **kwargs):
+        profile = SamlProfile.objects.get(name=saml_profile_name)
         self.fields['issuer_id'] = profile.issuer_id
         self.fields['saml_subject'] = profile.saml_subject
-        for attribute in SamlProfileAttribute.objects.filter(saml_profile_id=saml_profile_id):
+        for attribute in SamlProfileAttribute.objects.filter(saml_profile_id=profile.id):
             pass #attributes[]
         #return render(request, self.template_name, {'fields': self.fields})
 
@@ -69,8 +69,8 @@ class SamlPostView(generic.ListView):
     def get(self, request, saml_profile_id=1, *args, **kwargs):
         '''GET requests reset the fields to their default values and render the form.'''
         self.get_default_fields()
-        if self.kwargs['saml_profile_id']:
-            self.get_profile(self.kwargs['saml_profile_id'])
+        if len(self.kwargs) > 0:
+            self.get_profile(self.kwargs['saml_profile_name'])
         return render(request, self.template_name, {'fields': self.fields})
 
     def post(self, request, *args, **kwargs):

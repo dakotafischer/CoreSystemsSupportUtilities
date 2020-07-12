@@ -21,7 +21,7 @@
     </tr>
     {% for profile in saml_profiles %}
     <tr class="profileRecord">
-        <td style="display:none"> {% url 'saml_post:SamlPostView' profile.id %} </td>
+        <td style="display:none"> {% url 'saml_post:SamlPostView' profile.name %} </td>
         <td style="display:none">{{ profile.id }}</td>
         <td>{{ profile.name }}</td>
         <td>{{ profile.issuer_id }}</td>
@@ -37,8 +37,8 @@
 
 <br>
 <br>
-<h2> Or create a new SAML profile from scratch:</h2>
-<input type="button" id="tst2" value="Create a New Profile" onclick="fnselect()" />
+<h2> Or create a new SAML Profile:</h2>
+<input type="button" id="tst2" value="Create a New Profile" onclick="createNewProfile()" />
 
 </div>
 <script src="{% static 'saml_post/js/saml_post.js' %}"></script>
