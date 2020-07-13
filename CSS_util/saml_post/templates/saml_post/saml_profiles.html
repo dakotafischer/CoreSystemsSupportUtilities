@@ -38,8 +38,7 @@
 <br>
 <br>
 <h2> Or create a new SAML Profile:</h2>
-<input type="button" id="tst2" value="Create a New Profile" onclick="createNewProfile()" />
-
+<button onclick="location.href='{% url 'saml_post:SamlPostView' %}'" type="button">Create a New Profile</button>
 </div>
 <script src="{% static 'saml_post/js/saml_post.js' %}"></script>
 </body>
