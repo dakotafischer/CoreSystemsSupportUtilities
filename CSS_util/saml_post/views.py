@@ -59,6 +59,7 @@ class SamlPostView(generic.ListView):
     
     def get_profile(self,  saml_profile_name, *args, **kwargs):
         profile = SamlProfile.objects.get(name=saml_profile_name)
+        self.fields['saml_profile_name'] = profile.name
         self.fields['issuer_id'] = profile.issuer_id
         self.fields['saml_subject'] = profile.saml_subject
         for attribute in SamlProfileAttribute.objects.filter(saml_profile_id=profile.id):

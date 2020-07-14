@@ -4,17 +4,29 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SAML_POST</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'logs/home_page.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'saml_post/css/saml_post.css' %}">
 </head>
-<body>
+<body class="content">
 <h1> SAML Post </h1>
 
 <form action="{% url 'saml_post:SamlPostView' %}" method="post">
 {% csrf_token %}
+    {% if fields.saml_profile_name %}
+    <label for="saml_profile_name">SAML Profile Name: </label>
+    <input type="text" name="saml_profile_name" id="saml_profile_name" value="{{ fields.saml_profile_name }}">
+    <p>Note: To save this as a New SAML Profile you can just change the name and press Save.</p>
+    {% else %}
+    <label for="saml_profile_name">SAML Profile Name: </label>
+    <input type="text" name="saml_profile_name" id="saml_profile_name" value="">
+    <p>Note: To save this SAML Profile for later just give it a name and press Save.</p>
+    {% endif %}
+    <input type="submit" value="Save SAML Profile">
+
+    <br> <br> <br> <br>
     <label for="issuer_id">Issuer ID: </label>
     <input type="text" name="issuer_id" id="issuer_id" size="40" value="{{ fields.issuer_id }}"><br>
 
-    <p>Attributes:</p>
+    <h2>Attributes:</h2>
     <label for="saml_subject">SAML Subject: </label>
     <input type="text" name="saml_subject" id="saml_subject" value="{{ fields.saml_subject }}"><br>
 
