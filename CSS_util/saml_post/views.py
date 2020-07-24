@@ -77,6 +77,8 @@ class SamlPostView(generic.ListView):
     def post(self, request, *args, **kwargs):
         post_data = request.POST.copy()
         self.update_default_fields(post_data)
+        if post_data['save_profile'] == True:
+            self.save_profile(request, post_data)
         signed_saml = self.generate_saml(post_data)
         encoded_saml = base64.b64encode(signed_saml)
         encoding = 'utf-8'
@@ -86,6 +88,24 @@ class SamlPostView(generic.ListView):
                       {'signed_saml': signed_saml, 'encoded_saml': encoded_saml, 'fields': self.fields})
                      # {'signed_saml': signed_saml.decode('utf-8'), 'encoded_saml': encoded_saml, 'fields': self.fields})
     
+    def save_profile(self, request, post_data):
+        saml_profile_name = post_data['saml_profile_name']
+        try:
+            # update the existing profile
+            saml_profile = SamlProfile.objects.get(name=saml_profile_name)
+            self.update_profile(saml_profile, post_data)
+        except self.model.DoesNotExist:
+            # save as a new profile
+            self.add_saml_profile(post_data)
+        # saving a profile doesn't mean the user wanted to generate saml. This should short circuit the post method and just return the profile. 
+        self.get(request, saml_profile_name=saml_profile_name)
+            
+
+    
+    def update_profile(self, saml_profile, post_data):
+        # use the post_data to update the saml_profile
+        pass
+
     def add_saml_profile(self, saml_profile):
         profile = SamlProfile(
             name = saml_profile['name'],
@@ -95,7 +115,7 @@ class SamlPostView(generic.ListView):
             acs_endpoint = saml_profile['acs_endpoint'],
         )
         profile.save()
-        add_saml_profile_attributes(profile_id, saml_profile['attributes'])
+        self.add_saml_profile_attributes(profile_id, saml_profile['attributes'])
     
     def add_saml_profile_attributes(self, profile_id, attributes):
         for name, value in attributes.items():

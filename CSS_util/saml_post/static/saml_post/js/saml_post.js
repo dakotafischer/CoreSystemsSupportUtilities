@@ -119,3 +119,9 @@ function loadProfile() {
     location.href = profile_url;
     // this should redirect to /saml_post/ + the profile id that the user selected
 }
+
+function saveSamlProfile() {
+    // needs to save a profile
+    document.getElementById('save_profile').value = 'True';
+    document.samlProfileForm.submit();
+}

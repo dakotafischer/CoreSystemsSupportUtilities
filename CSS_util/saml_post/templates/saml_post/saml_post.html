@@ -9,18 +9,23 @@
 <body class="content">
 <h1> SAML Post </h1>
 
-<form action="{% url 'saml_post:SamlPostView' %}" method="post">
+<form name="samlProfileForm" action="{% url 'saml_post:SamlPostView' %}" method="post">
 {% csrf_token %}
     {% if fields.saml_profile_name %}
     <label for="saml_profile_name">SAML Profile Name: </label>
     <input type="text" name="saml_profile_name" id="saml_profile_name" value="{{ fields.saml_profile_name }}">
-    <p>Note: To save this as a New SAML Profile you can just change the name and press Save.</p>
+    <input type="submit" onclick="saveSamlProfile()" value="Save SAML Profile">
+    <p class="userTip">Note: To save this as a New SAML Profile you can just change the name and press Save.</p>
     {% else %}
     <label for="saml_profile_name">SAML Profile Name: </label>
     <input type="text" name="saml_profile_name" id="saml_profile_name" value="">
-    <p>Note: To save this SAML Profile for later just give it a name and press Save.</p>
+    <input type="submit" onclick="saveSamlProfile()" value="Save SAML Profile">
+    <p class="userTip">Note: To save this SAML Profile for later just give it a name and press Save.</p>
     {% endif %}
-    <input type="submit" value="Save SAML Profile">
+    <input type="hidden" id="save_profile" name="save_profile" value="False">
+    
+    
+
 
     <br> <br> <br> <br>
     <label for="issuer_id">Issuer ID: </label>
